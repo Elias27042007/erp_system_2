@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+    <html lang="de">
+        <head>
+			<meta charset="UTF-8">
+			<title></title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+            <link href="style.css" rel="stylesheet">
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+            <!--<script type="module" src="./home.js"></script>-->
+            <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+            <script type="module" src="./index.js"></script>
+            <script type="module" src="./sessionCheck.js"></script>
+		</head>
+        <body class="container-fluid">
+            <div class="row flex-column flex-md-row min-vh-100">
+                <!-- Sidebar -->
+                <nav class="col-12 col-md-3 col-lg-2 sidebar d-flex flex-column p-3 position-sticky top-0 vh-100 overflow-auto position-relative">
+                    <h4 class="text-white mb-4 text-center">Navigation</h4>
+                    <ul class="nav nav-pills flex-column mb-3">
+                    <li class="nav-item">
+                        <a class="nav-link active" aria.current="page" href="index.html">🏠 Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link"  href="lager.html">📦 Lager</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mitarbeiter.html">👥 Mitarbeiter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="rechnungen.html">🧾 Rechnungen</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="kunden.html">💼 Kunden</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="service.html">🛠️ Service</a>
+                    </li>
+                    </ul>
+
+                    <div class="mt-auto">
+                        <!-- Logo mittig -->
+                        <div class="text-center mb-3">
+                            <img src="logo.png" alt="Installations GmbH Bergermayer" class="img-fluid rounded" style="max-width: 140px;"/>
+                        </div>
+
+                        <!-- Logout Button links unten -->
+                        <button class="btn btn-danger w-100" id="logoutBtn">Abmelden</button>
+                    </div>
+                </nav>
+
+                <!-- Hauptinhalt -->
+                <main class="col-12 col-md-9 col-lg-10 bg-light p-3">
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h1 class="fw-bold">Home</h1>
+                    <!--<form class="d-flex" role="search">
+                         class="form-control me-2" type="search" placeholder="Suchen..." aria-label="Search"/>
+                        <button class="btn btn-primary" type="submit">Suchen</button>
+                    </form>-->
+                    </div>
+
+                    <div class="container p-3 bg-white rounded shadow-sm mt-2 row g-3">                        
+                        <div class="col-12 col-md-6 col-lg-3 p-1">
+                            <div class="card shadow-sm" id="kundenDashboard">
+                                <p>💼 Kunden</p>
+                                <p>Privat: <label id="kunden_privat"></label></p>
+                                <p>Firmen: <label id="kunden_firma"></label></p>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3 p-1">
+                            <div class="card shadow-sm" id="serviceDashboard">
+                                <p>🛠️ Service</p>
+                                <p>Fällig: <label id="faellig"></label></p>
+                                <p>bald fällig: <label id="bald_faellig"></label></p>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3 p-1">
+                            <div class="card shadow-sm" id="rechnungenDashboard">
+                                <p>🧾 Rechnungen/Angebote</p>
+                                <p>Rechnungen: <label id="rechnungen"></label></p>
+                                <p>Angebote: <label id="angebote"></label></p>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-3 p-1">
+                            <div class="card shadow-sm" id="mitarbeiterDashboard">
+                                <p>👥 Mitarbeiter</p>
+                                <p>Mitarbeiter: <label id="mitarbeiter"></label></p>
+                                <p>Abwesend: <label id="mitarbeiter_abwesend"></label></p>
+                            </div>
+                        </div>                        
+                    </div>
+
+                
+
+                   <div class="container bg-white rounded shadow-sm p-4 mt-3">
+                        <div class="row g-3">
+                            <div class="col-12 col-md-6 col-lg-3">
+                             <button class="btn btn-primary w-100" onclick="window.location.href='kunden.html?modal=add'">
+                                💼 Kunden hinzufügen
+                            </button>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-lg-3">                           
+                             <button class="btn btn-primary w-100" onclick="window.location.href='lager.html?modal=add'">
+                                📦 Artikel hinzufügen
+                            </button>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-lg-3">                           
+                            <button class="btn btn-primary w-100" onclick="window.location.href='rechnungen.html?modal=add'">
+                                🧾 Rechnung hinzufügen
+                            </button>
+                            </div>
+
+                            <div class="col-12 col-md-6 col-lg-3">                            
+                            <button class="btn btn-primary w-100" onclick="window.location.href='mitarbeiter.html?modal=add'">
+                                👥 Mitarbeiter hinzufügen
+                            </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row mt-3">
+                        <div class="col-lg-6 col-12">
+                            <div class="card shadow-sm">
+                                <div class="card-header fw-semibold">
+                                    <p>Umsätze der letzten Monate</p>
+                                </div>
+                                <div class="card-body p-0">
+                                    <ul class="list-group list-group-flush" id="umsatzListe">
+                                    <!-- wird per JS befüllt -->
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-6 col-12">
+                            <div class="card shadow-sm">
+                                <div class="card-header fw-semibold">
+                                    <p>Monatlicher Umsatz</p>
+                                </div>
+                                <div class="card-body">
+                                    <div style="height: 200px;">
+                                        <canvas id="umsatzChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+
+
+                </main>
+            </div>
+            
+        </body>
+        
+
+
+    </html>

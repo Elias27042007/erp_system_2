@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+    <html lang="de">
+        <head>
+			<meta charset="UTF-8">
+			<title></title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+            <link href="style.css" rel="stylesheet">
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+            <script type="module" src="./sessionCheck.js"></script>
+            <script type="module" src="./scriptservice.js"></script>
+		</head>
+        <body class="container-fluid">
+            <div class="row flex-column flex-md-row min-vh-100">
+            <!-- Sidebar -->
+                <nav class="col-12 col-md-3 col-lg-2 sidebar d-flex flex-column p-3">
+                    <h4 class="text-white mb-4 text-center">Navigation</h4>
+                    <ul class="nav nav-pills flex-column mb-3">
+                    <li class="nav-item">
+                        <a class="nav-link" href="index.html">🏠 Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="lager.html">📦 Lager</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="mitarbeiter.html">👥 Mitarbeiter</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="rechnungen.html">🧾 Rechnungen</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="kunden.html">💼 Kunden</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" aria.current="page" href="service.html">🛠️ Service</a>
+                    </li>
+                    </ul>
+
+                    <div class="mt-auto">
+                        <!-- Logo mittig -->
+                        <div class="text-center mb-3">
+                            <img
+                            src="logo.png"
+                            alt="Installations GmbH Bergermayer"
+                            class="img-fluid rounded"
+                            style="max-width: 140px;"
+                            />
+                        </div>
+
+                        <!-- Logout Button links unten -->
+                        <button class="btn btn-danger w-100" id="logoutBtn">
+                            Abmelden
+                        </button>
+                        </div>
+                </nav>
+                <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 2000;"></div>
+
+                
+
+                <!-- Hauptinhalt -->
+                <main class="col-12 col-md-9 col-lg-10 bg-light p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h1 class="fw-bold">Anstehende Services</h1>
+                        <form class="d-flex" role="search">
+                            <input class="form-control me-2" type="search" placeholder="Suchen..." aria-label="Search" id="suche"/>
+                            <!--<button class="btn btn-primary" type="submit">Suchen</button>-->
+                        </form>
+                    </div>
+
+                    <div class="p-4 bg-white rounded shadow-sm">
+                    <div class="table-responsive table tabelle-scroll">
+                        <table class="table table-striped table-hover" id="serviceTabelle">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Firma</th>
+                                    <th>Vorname</th>
+                                    <th>Nachname</th>
+                                    <th>Kontakt</th>
+                                    <th>Adresse</th>
+                                    <th>Postleitzahl</th>
+                                    <th>Ort</th>
+                                    <th>Letztes Service</th>
+                                    <th>Nächstes Service</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                    
+
+                </main>
+
+                <div class="modal fade" id="serviceEintragen" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Heizungs Service eintragen</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="service_datum" class="form-label p-1">Service Datum<span class="text-danger">*</span></label>
+                                    <input type="date" class="form-control" id="service_datum" >
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-primary" data-bs-dismiss="modal" >Abrechen</button>
+                                <button class="btn btn-primary" id="kServiceSpeichern">Speichern</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                
+
+            </div>
+        </body>
+    </html>

@@ -1,0 +1,65 @@
+body {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #2b2f77, #4e6cf0);
+  overflow: hidden;
+  position: relative;
+}
+
+/* Weiche animierte Formen */
+body::before,
+body::after {
+  content: '';
+  position: absolute;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.15), transparent 70%);
+  animation: float 10s ease-in-out infinite;
+}
+
+body::after {
+  width: 600px;
+  height: 600px;
+  background: radial-gradient(circle at center, rgba(255,255,255,0.1), transparent 80%);
+  animation-delay: 5s;
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(50px, -50px);
+  }
+}
+#loginBox {
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border-radius: 20px;
+      padding: 2rem;
+      width: 100%;
+      max-width: 400px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+      color: #fff;
+      animation: fadeIn 1.2s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .btn-gradient {
+      background: linear-gradient(to right, #6a5af9, #00c0ff);
+      border: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .btn-gradient:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 192, 255, 0.4);
+    }

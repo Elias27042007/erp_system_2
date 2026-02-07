@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Lagerverwaltung</title>
+
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+
+    <!-- GSAP (wenn du es später brauchst) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+
+    <!-- Deine eigene CSS -->
+    <link href="style.css" rel="stylesheet" />
+
+    <!-- Bootstrap JS Bundle -->
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+      defer
+    ></script>
+
+    <!-- Deine Skripte -->
+    <!--<script src="scriptlager.js" defer></script>-->
+    <script type="module" src="./sessionCheck.js"></script>
+    <script type="module" src="scriptlager.js" defer></script>
+    <!--<script src="main.js" defer></script>-->
+    <!--Unnötig das main da oben-->
+
+  </head>
+
+  <body class="container-fluid">
+    <div class="row flex-column flex-md-row min-vh-100">
+      <!-- Sidebar -->
+      <nav class="col-12 col-md-3 col-lg-2 sidebar d-flex flex-column p-3">
+        <h4 class="text-white mb-4 text-center">Navigation</h4>
+        <ul class="nav nav-pills flex-column mb-3">
+          <li class="nav-item">
+            <a class="nav-link" href="index.html">🏠 Home</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="lager.html">📦 Lager</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="mitarbeiter.html">👥 Mitarbeiter</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="rechnungen.html">🧾 Rechnungen</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="kunden.html">💼 Kunden</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="service.html">🛠️ Service</a>
+          </li>
+        </ul>
+
+        
+
+        <div class="mt-auto">
+                    <!-- Logo mittig -->
+                    <div class="text-center mb-3">
+                        <img
+                        src="logo.png"
+                        alt="Installations GmbH Bergermayer"
+                        class="img-fluid rounded"
+                        style="max-width: 140px;"
+                        />
+                    </div>
+
+                    <!-- Logout Button links unten -->
+                    <button class="btn btn-danger w-100" id="logoutBtn">
+                        Abmelden
+                    </button>
+                    </div>
+      </nav>
+
+
+      <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 2000;"></div> 
+
+      <!-- Hauptinhalt -->
+      <main class="col-12 col-md-9 col-lg-10 bg-light p-4">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4 gap-3">
+          <h1 class="fw-bold mb-0">Lagerübersicht</h1>
+
+          <!-- Suchfeld, das scriptlager.js verwendet -->
+          <form class="d-flex" role="search" onsubmit="return false;">
+            <input class="form-control me-2" type="search" placeholder="Suchen..." aria-label="Search" id="suchfeld"/>
+          </form>
+        </div>
+
+        <div class="p-4 bg-white rounded shadow-sm">
+          <div class="table-responsive tabelle-scroll">
+            <table class="table table-striped table-hover" id="materialTabelle">
+              <thead class="table-dark">
+                <tr>
+                  <th>Artikel-Nr.</th>
+                  <th>Bezeichnung</th>
+                  <th>Einheit</th>
+                  <th>Einkaufspreis</th>
+                  <th>Verkaufspreis</th>
+                  <th>Bestand</th>
+                </tr>
+              </thead>
+              <tbody id="artikelBody">
+                <!-- wird mit JavaScript befüllt -->
+              </tbody>
+            </table>
+          </div>
+
+          <br>          
+          <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#materialHinzufuegenModal" id="materialHinzufuegenBtn">Material hinzufügen</button>                  
+        </div>
+      </main>
+    </div>
+
+    <!-- =========================================================
+         MODAL: Material hinzufügen (materialForm)
+         ========================================================= -->
+    <div class="modal fade" id="materialHinzufuegenModal" tabindex="-1">
+      <div class="modal-dialog modal-dialog-centered modal-dialog-lg modal-dialog-scrollable">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Material hinzufügen</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+          </div>
+          <div class="modal-body">            
+              <div class="mb-3">
+                <label for="bezeichnung" class="form-label p-1">Bezeichnung<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="bezeichnung" placeholder="Materialbezeichnung" required/>
+              </div>
+              <div class="mb-3">
+                <label for="beschreibung" class="form-label p-1">Beschreibung</label>
+                <input type="text" class="form-control" id="beschreibung" placeholder="Materialbeschreibung"/>
+              </div>
+              <div class="mb-3">
+                <label for="einheit" class="form-label p-1">Einheit</label>
+                <select class="form-select" id="einheit">
+                    <option value="" selected>Auswählen...</option>
+                    <option value="kg">Kg</option>
+                    <option value="Meter">Meter</option>
+                    <option value="Stk">Stück</option>
+                    <option value="Stunden">Stunden</option>
+                    <option value="Packung">Packung</option>
+                    <option value="cm">cm</option>
+                    <option value="Satz">Satz/Set</option>
+                    <option value="Liter">Liter</option>
+                    <option value="Karton">Karton</option>
+                    <option value="Palette">Palette</option>
+                    <option value="Dose">Dose</option>
+                    <option value="Tube">Tube</option>
+                    <option value="Kartusche">Kartusche</option>
+                </select>   
+                <!--<input type="text" class="form-control" id="edit_mitarbeiterRolle" placeholder="Rolle">-->
+              </div>
+              <!--
+              <div class="mb-3">
+                <label for="einheit" class="form-label p-1">Einheit</label>
+                <input type="text" class="form-control" id="einheit" placeholder="z.B. Stück, m, kg" />
+              </div>-->
+              <div class="mb-3">
+                <label for="einkaufspreis_vorher" class="form-label p-1">Vorheriger Einkaufspreis</label>
+                <input type="number" step="0.01" class="form-control" id="einkaufspreis_vorher" placeholder="0,00"/>
+              </div>
+              <div class="mb-3">
+                <label for="einkaufspreis" class="form-label p-1">Einkaufspreis<span class="text-danger">*</span></label>
+                <input type="number" step="0.01" class="form-control" id="einkaufspreis" placeholder="0,00"/>
+              </div>
+              <div class="mb-3">
+                <label for="verkaufspreis_vorher" class="form-label p-1">Vorheriger Verkaufspreis</label>
+                <input type="number" step="0.01" class="form-control" id="verkaufspreis_vorher" placeholder="0,00"/>
+              </div>
+              <div class="mb-3">
+                <label for="verkaufspreis" class="form-label p-1">Verkaufspreis<span class="text-danger">*</span></label>
+                <input type="number" step="0.01" class="form-control" id="verkaufspreis" placeholder="0,00"/>
+              </div>
+              <div class="mb-3">
+                <label for="mwst_satz" class="form-label p-1">Mehrwertsteuersatz (%)</label>
+                <input type="number" step="0.01" class="form-control" id="mwst_satz" placeholder="z.B. 20"/>
+              </div>
+
+              <div class="mb-3">
+                <label for="mindestbestand" class="form-label p-1 ">Mindestbestand</label>
+                <input type="number" class="form-control" id="mindestbestand" value="0" min="0"/>
+              </div>
+
+              <div class="mb-3">
+                <label for="lagerort" class="form-label p-1">Lagerort</label>
+                <select class="form-select" id="lagerort">
+                  <option value="Hauptlager">Auswählen...</option>
+                  <option value="Hauptlager">Hauptlager</option>
+                  <option value="Lager2">Lager 2</option>
+                  <option value="Lager3">Lager 3</option>
+                </select>
+              </div>
+              <!--
+              <div class="mb-3">
+                <label for="lagerort" class="form-label p-1 ">Lagerort</label>
+                <input type="text" class="form-control" id="lagerort" placeholder="z.B. Hauptlager"/>
+              </div>-->
+
+              <!--<p id="meldung" class="mt-2"></p>    -->   
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="materialSpeichernBtn" >Speichern</button>
+          </div>            
+        </div>
+      </div>
+    </div>
+    
+
+   
+    
+      <div class="modal fade" id="artikelVerwalten" tabindex="-1">    <!--Achtung Id geänder in javascript noch ändern-->
+            <div class="modal-dialog modal-dialog-centered modal-dialog-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Artikel Verwalten</h5>
+                  <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                </div>
+                <div class="modal-body">
+                  <button class=" btn btn-warning d-block w-100 mb-2" id="materialBearbeitenBtn">✏️ Material bearbeiten</button>
+                  <button class="btn btn-primary d-block w-100 mb-2" id="warenbewegungBtn">🚚📦Warenbewegung buchen</button>
+                  <button class="btn btn-success d-block w-100 mb-2 " id="artikelDetailsBtn">📦Materialdetails anzeigen</button>
+                  <button class="btn btn-danger d-block w-100 mb-2"  id="artikelLoeschenBtn">🗑️ Material löschen</button>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="materialVerwaltenAbbrechen">Abbrechen</button>                              
+
+                </div>
+              </div>
+            </div>
+        </div>
+
+        <!--Untermodal zum bearbeiten-->
+        <div class="modal fade" id="artikelBearbeiten" tabindex="-1">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-lg modal-dialog-scrollable">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Artikel bearbeiten</h5>
+                  <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="mb-3">
+                    <label for="bezeichnung" class="form-label p-1">Bezeichnung</label>
+                    <input type="text" class="form-control" id="editBezeichnung" placeholder="Materialbezeichnung" required/>
+                  </div>
+                  <div class="mb-3">
+                    <label for="beschreibung" class="form-label p-1">Beschreibung</label>
+                    <input type="text" class="form-control" id="editBeschreibung" placeholder="Materialbeschreibung"/>
+                  </div>
+                  <div class="mb-3">
+                    <label for="edit_einheit" class="form-label p-1">Einheit</label>
+                    <select class="form-select" id="edit_einheit">              
+                        
+                        <option value="kg">Kg</option>
+                        <option value="Meter">Meter</option>
+                        <option value="Stk">Stück</option>
+                        <option value="Stunden">Stunden</option>
+                        <option value="Packung">Packung</option>
+                        <option value="cm">cm</option>
+                        <option value="Satz">Satz/Set</option>
+                        <option value="Liter">Liter</option>
+                        <option value="Karton">Karton</option>
+                        <option value="Palette">Palette</option>
+                        <option value="Dose">Dose</option>
+                        <option value="Tube">Tube</option>
+                        <option value="Kartusche">Kartusche</option>
+
+                    </select>   
+                    <!--<input type="text" class="form-control" id="edit_mitarbeiterRolle" placeholder="Rolle">-->
+                  </div>
+                  <!--
+                  <div class="mb-3">
+                    <label for="einheit" class="form-label p-1">Einheit</label>
+                    <input type="text" class="form-control" id="editEinheit" placeholder="z.B. Stück, m, kg" />
+                  </div>-->
+                  <div class="mb-3">
+                    <label for="einkaufspreis" class="form-label p-1">Vorheriger Einkaufspreis</label>
+                    <input type="number" step="0.01" class="form-control" id="editEinkaufspreis_vorher" placeholder="0,00"/>
+                  </div>
+                  <div class="mb-3">
+                    <label for="einkaufspreis" class="form-label p-1">Einkaufspreis</label>
+                    <input type="number" step="0.01" class="form-control" id="editEinkaufspreis" placeholder="0,00"/>
+                  </div>
+                  <div class="mb-3">
+                    <label for="verkaufspreis" class="form-label p-1">Vorheriger Verkaufspreis</label>
+                    <input type="number" step="0.01" class="form-control" id="editVerkaufspreis_vorher" placeholder="0,00"/>
+                  </div>
+                  <div class="mb-3">
+                    <label for="verkaufspreis" class="form-label p-1">Verkaufspreis</label>
+                    <input type="number" step="0.01" class="form-control" id="editVerkaufspreis" placeholder="0,00"/>
+                  </div>
+                  <div class="mb-3">
+                    <label for="mwst_satz" class="form-label p-1">Mehrwertsteuersatz (%)</label>
+                    <input type="number" step="0.01" class="form-control" id="editMwst_satz" placeholder="z.B. 20"/>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="mindestbestand" class="form-label p-1 ">Mindestbestand</label>
+                    <input type="number" class="form-control" id="editMindestbestand" value="0" min="0"/>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="lagerort" class="form-label p-1">Lagerort</label>
+                    <select class="form-select" id="editLagerort">
+                      
+                      <option value="Hauptlager">Hauptlager</option>
+                      <option value="Lager2">Lager 2</option>
+                      <option value="Lager3">Lager 3</option>
+                    </select>
+                  </div>
+
+                  <!--
+
+                  <div class="mb-3">
+                    <label for="lagerort" class="form-label p-1 ">Lagerort</label>
+                    <input type="text" class="form-control" id="editLagerort" placeholder="z.B. Hauptlager"/>
+                  </div>-->
+                  
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-primary" id="artikelBearbeitenSpeichernBtn">Speichern</button>                              
+
+                </div>
+              </div>
+            </div>
+
+        </div>
+
+        <div class="modal fade" id="warenbewegungModal" tabindex="-1" >
+          <div class="modal-dialog modal-dialog-centered modal-dialog-lg modal-dialog-scrollable">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="warenbewegungLabel">Warenbewegung buchen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"aria-label="Schließen"></button>
+              </div>
+              <div class="modal-body"> 
+                <!-- Artikel-Info + aktueller Bestand -->
+                  <div class="mb-3 p-3 bg-light rounded border">
+                    <div class="fw-semibold">
+                      Artikel:
+                      <span id="wb_artikelInfo">-</span>
+                    </div>
+                    <div class="text-muted">
+                      Aktueller Bestand:
+                      <span id="wb_bestand">-</span>
+                    </div>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label d-block">Art der Bewegung<span class="text-danger">*</span></label>
+
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="bewegungArt" id="option1" value="eingang"/>
+                      <label class="form-check-label" for="option1">Wareneingang</label>
+                    </div>
+                    <div class="form-check">
+                      <input class="form-check-input" type="radio" name="bewegungArt" id="option2" value="ausgang"/>
+                      <label class="form-check-label" for="option2"> Warenausgang </label>
+                    </div>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="menge_eingang" class="form-label">Menge<span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" id="menge_eingang" required/>
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="lagerort_eingang" class="form-label">Lagerort auswählen<span class="text-danger">*</span></label>
+                    <select class="form-select" id="lagerortAuswaehlern">
+                      <option value="" selected>Bitte auswählen...</option>
+                      <option value="Hauptlager">Hauptlager</option>
+                      <option value="Lager2">Lager 2</option>
+                      <option value="Lager3">Lager 3</option>
+                    </select>                    
+                  </div>
+
+                  <div class="mb-3">
+                    <label for="bemerkung_eingang" class="form-label">Bemerkung</label>
+                    <input type="text" class="form-control" id="bemerkung_eingang"/>
+                  </div>
+
+                  <p id="meldung1" class="mt-2"></p>            
+                  <button type="button" class="btn btn-primary" id="artieklbewegungBuchenBtn">Buchen </button>
+                  </div>
+                
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal fade" id="artikelLoeschen" tabindex="-1">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="warenbewegungLabel">Warenbewegung buchen</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"aria-label="Schließen"></button>
+              </div>
+              <div class="modal-body">
+                <p>
+                  Wollen Sie <span id="artikelBezeichnungLoeschen"></span> wirklich löschen?.
+                </p>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Abbrechen </button>
+                <button type="button" class="btn btn-primary" id="artikelEndgueltigLoeschenBtn">Löschen </button>                
+              </div>
+            </div>
+          </div>
+
+        </div>
+        <div class="modal fade" id="artikelDetails" tabindex="-1">
+          <div class="modal-dialog modal-dialog-centered modal-dialog-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title">Materialdetails</h5>
+                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Schließen"></button>
+              </div>
+              <div class="modal-body">
+                <div class="mb-3">
+                  <h4 id="detailMaterialName" class="fw-bold"></h4>
+                </div>
+                <hr>
+                <!-- BESCHREIBUNG -->
+                <div class="mb-3">
+                  <h5 class="fw-semibold">📝 Beschreibung</h5>
+                  <p class="mb-0" id="detailBeschreibung"></p>
+                  
+                </div>
+
+                
+                <hr>   <!-- PREISE -->
+                <div class="mb-3">
+                  <h5 class="fw-semibold">💰 Preise</h5>
+                  <p class="mb-0">
+                    <span class="fw-semibold">Vorheriger Einkaufspreis:</span>
+                    <span id="detailEinkaufspreis_vorher"></span>
+                  </p>
+                  <p class="mb-0">
+                    <span class="fw-semibold">Einkaufspreis:</span>
+                    <span id="detailEinkaufspreis"></span>
+                  </p>
+                  <p class="mb-0">
+                    <span class="fw-semibold">Vorheriger Verkaufspreis:</span>
+                    <span id="detailVerkaufspreis_vorher"></span>
+                  </p>
+                  <p class="mb-0">
+                    <span class="fw-semibold">Verkaufspreis:</span>
+                    <span id="detailVerkaufspreis"></span>
+                  </p>
+                  <p class="mb-0">
+                    <span class="fw-semibold">MwSt-Satz:</span>
+                    <span id="detailMwst"></span>
+                  </p>
+                </div>
+                <hr>                        
+                <div class="mb-3">
+                  <h5 class="fw-semibold">📦 Lager</h5>
+                  <p class="mb-0">
+                    <span class="fw-semibold">Einheit:</span>
+                    <span id="detailEinheit"></span>
+                  </p>
+                  <p class="mb-0">
+                    <span class="fw-semibold">Mindestbestand:</span>
+                    <span id="detailMindestbestand"></span>
+                  </p>
+                  <p class="mb-0">
+                    <span class="fw-semibold">Aktueller Bestand:</span>
+                    <span id="detailBestand"></span>
+                  </p>
+                  <p class="mb-0">
+                    <span class="fw-semibold">Lagerort:</span>
+                    <span id="detailLagerort"></span>
+                  </p>
+                </div>
+              </div>
+              <div class="modal-footer">
+                
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+
+    </div>
+  </body>
+</html>

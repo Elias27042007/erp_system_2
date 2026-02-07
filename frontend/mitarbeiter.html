@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+    <html lang="de">
+        <head>
+			<meta charset="UTF-8">
+			<title></title>
+            <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+            <link href="style.css" rel="stylesheet">
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+            <script type="module" src="./sessionCheck.js"></script>
+            <script type="module" src="./mitarbeiter.js"></script>
+
+
+		</head>
+        <body class="container-fluid">
+            <div class="row flex-column flex-md-row min-vh-100">
+            <!-- Sidebar -->
+            <nav class="col-12 col-md-3 col-lg-2 sidebar d-flex flex-column p-3">
+                <h4 class="text-white mb-4 text-center">Navigation</h4>
+                <ul class="nav nav-pills flex-column mb-3">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">🏠 Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="lager.html">📦 Lager</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="mitarbeiter.html">👥 Mitarbeiter</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="rechnungen.html">🧾 Rechnungen</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="kunden.html">💼 Kunden</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="service.html">🛠️ Service</a>
+                </li>
+                </ul>
+
+                <div class="mt-auto">
+                    <!-- Logo mittig -->
+                    <div class="text-center mb-3">
+                        <img src="logo.png" alt="Installations GmbH Bergermayer" class="img-fluid rounded" style="max-width: 140px;"/></div>
+                        <!-- Logout Button links unten -->
+                        <button class="btn btn-danger w-100" id="logoutBtn">Abmelden</button>
+                </div>
+            </nav>
+            <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 2000;"></div>
+
+            
+
+            <!-- Hauptinhalt -->
+            <main class="col-12 col-md-9 col-lg-10 bg-light p-4">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="fw-bold">Mitarbeiter</h1>
+                    <form class="d-flex" role="search">
+                        <input class="form-control me-2" type="search" placeholder="Suchen..." aria-label="Search" id="suche"/>
+                        <!--<button class="btn btn-primary" type="submit">Suchen</button>-->
+                    </form>
+                </div>
+
+                
+
+                <div class="p-4 bg-white rounded shadow-sm">
+                    
+                    <div class="table-responsive tabelle-scroll">
+                        <table class="table table-striped table-hover" id="mitarbeitertabelle">
+                            <thead class="table-dark ">
+                                <tr>
+                                    <th>Vorname</th>
+                                    <th>Nachname</th>
+                                    <th>Adresse</th>
+                                    <th>Postleitzahl</th>
+                                    <th>Ort</th>
+                                    <th>Email</th>
+                                    <th>Telefon</th>
+                                    <th>Rolle</th>
+                                    <th>erstellt</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+
+                    <br>
+
+                    <button data-bs-toggle="modal" data-bs-target="#mitarbeiterHinzufuegen" class=" btn btn-primary mb-2" id="mitarbeiterHinzufuegenBtn">Mitarbeiter hinzufügen</button>
+                    
+                    <div class="modal fade" id="mitarbeiterHinzufuegen" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-lg modal-dialog-scrollable">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Mitarbeiter hinzufügen</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Schließen"></button>
+
+                                </div>
+                                <div class="modal-body">
+                                    
+                                    <div class="mb-3">
+                                        <label for="vorname" class="form-label p-1">Vorname<span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="vorname" placeholder="Vorname">
+                                    </div>
+                                     <div class="mb-3">
+                                        <label for="nachname" class="form-label p-1">Nachname<span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="nachname" placeholder="Nachname">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="form-label">Adresse<span class="text-danger">*</span></label>
+                                        <div class="row g-2">
+                                            <div class="col-12">
+                                                <input type="text" class="form-control" id="adresse" placeholder="Adresse">
+                                            </div>                                        
+                                            <div class="col-md-6">
+                                                <input type="text" class="form-control" id="stadt" placeholder="Stadt">
+                                            </div>
+                                            <div class="col-md-3">
+                                                <input type="number" class="form-control" id="postleitzahl" placeholder="PLZ">
+                                            </div>
+                                            
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="versicherungsnummer" class="form-label p-1">Versicherungsnummer<span class="text-danger">*</span></label>
+                                        <input type="number" class="form-control" id="versicherungsnummer" placeholder="1234567890">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="bankdaten" class="form-label p-1">Bankdaten<span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="iban" placeholder="AT57 2011 1123 4567 8910">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="email" class="form-label p-1">E-Mail-Adresse<span class="text-danger">*</span></label>
+                                        <input type="email" class="form-control" id="email" placeholder="E-Mail-Adresse">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="telefon" class="form-label p-1">Telefonnummer</label>
+                                        <input type="tel" class="form-control" id="telefonnummer" placeholder="Telefonnummer">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="rolle" class="form-label p-1">Rolle<span class="text-danger">*</span></label>
+                                        <select class="form-select" id="mitarbeiterRolle">
+                                            <option value="" selected>Bitte auswählen...</option>
+                                            <option value="1">Admin</option>
+                                            <option value="3">Lager</option>
+                                            <option value="4">Mitarbeiter</option>
+                                            <option value="2">Buchhaltung</option>
+                                        </select>   
+                                        <!--<input type="edit" class="form-control" id="mitarbeiterRolle" placeholder="Rolle">-->
+                                    </div>
+
+                                    <h3>LoginDaten</h3>
+                                    <div class="mb-3">
+                                        <label for="benutzername" class="form-label p-1">Benutzername<span class="text-danger">*</span></label>
+                                        <input type="text" class="form-control" id="benutzername" placeholder="Benutzername">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="passwort" class="form-label p-1">Passwort<span class="text-danger">*</span></label>
+                                        <input type="password" class="form-control" id="passwort" placeholder="Passwort">
+                                        <label for="passwort" class="form-label p-1">Passwort wiederholen<span class="text-danger">*</span></label>
+                                        <input type="password" class="form-control" id="passwortWh" placeholder="Passwort">                                
+                                    </div>                              
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" id="mitarbeiterSpeichernBtn"> Speichern</button>
+                                    
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="mitarbeiterVerwalten" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Mitarbeiter verwalten</h5>
+                                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <button class=" btn btn-warning d-block w-100 mb-2" id="mitarbeiterBearbeitenBtn">✏️ Mitarbeiter bearbeiten</button>
+                                    <button class="btn btn-success d-block w-100 mb-2 " id="mitarbeiterDetailsBtn"> Mitarbeiterdetails anzeigen</button>
+                                    <button class="btn btn-danger d-block w-100 mb-2"  id="mitarbeiterLoeschenBtn">🗑️ Mitarbeiter löschen</button>
+                                    <button class ="btn btn-success d-block w-100 mb-2" id="urlaubHinzufuegen">Urlaub hinzufügen</button>
+                                    <button class="btn btn-success d-block w-100 mb-2" id="krankheitstageHinzufuegen">Krankenstand hinzufügen</button>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="mitarbeiterVerwaltenAbbrechen">Abbrechen</button>                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>   
+
+
+                    
+                </div>
+                <div class="modal fade" id="mitarbeiterBearbeiten" tabindex="-1">
+                    <div class="modal-dialog modal-dialog-centered modal-dialog-lg modal-dialog-scrollable">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title">Mitarbeiter bearbeiten</h5>
+                                <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="mb-3">
+                                    <label for="vorname" class="form-label p-1">Vorname</label>
+                                    <input type="text" class="form-control" id="edit_vorname" placeholder="Vorname">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="nachname" class="form-label p-1">Nachname</label>
+                                    <input type="text" class="form-control" id="edit_nachname" placeholder="Nachname">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label">Adresse</label>
+                                    <div class="row g-2">
+                                        <div class="col-12">
+                                            <input type="text" class="form-control" id="edit_adresse" placeholder="Adresse">
+                                        </div>                                        
+                                        <div class="col-md-6">
+                                            <input type="text" class="form-control" id="edit_stadt" placeholder="Stadt">
+                                        </div>
+                                        <div class="col-md-3">
+                                            <input type="number" class="form-control" id="edit_postleitzahl" placeholder="Postleitzahl">
+                                        </div>
+                                        
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label p-1">E-Mail-Adresse</label>
+                                    <input type="email" class="form-control" id="edit_email" placeholder="E-Mail-Adresse">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="telefon" class="form-label p-1">Telefonnummer</label>
+                                    <input type="tel" class="form-control" id="edit_telefonnummer" placeholder="Telefonnummer">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="rolle" class="form-label p-1">Rolle</label>
+                                    <select class="form-select" id="edit_mitarbeiterRolle">
+                                        
+                                        <option value="admin">Admin</option>
+                                        <option value="lager">Lager</option>
+                                        <option value="mitarbeiter">Mitarbeiter</option>
+                                        <option value="buchhaltung">Buchhaltung</option>
+                                    </select>   
+                                    <!--<input type="text" class="form-control" id="edit_mitarbeiterRolle" placeholder="Rolle">-->
+                                </div>
+
+                                <h3>LoginDaten</h3>
+                                <div class="mb-3">
+                                    <label for="benutzername" class="form-label p-1">Benutzername</label>
+                                    <input type="text" class="form-control" id="edit_benutzername" placeholder="Benutzername">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="passwort" class="form-label p-1">Passwort</label>
+                                    <input type="password" class="form-control" id="edit_passwort" placeholder="Passwort">
+                                    <label for="passwort" class="form-label p-1">Passwort wiederholen</label>
+                                    <input type="password" class="form-control" id="edit_passwortWh" placeholder="Passwort">                                
+                                </div>   
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="mitarbeiterBearbeitenSpeichernBtn">Speichern</button>
+                                
+                            </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="mitarbeiterDetails" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Mitarbeiterdetails</h5>
+                                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <h4 id="detailName" class="fw-bold"></h4>
+                                        <p class="mb-0">
+                                            <span class="fw-semibold">Rolle:</span>
+                                            <span id="detailRolle"></span>
+                                        </p>
+                                        <p class="mb-0">
+                                            <span class="fw-semibold">Versicherungsnummer:</span>
+                                            <span id="detailVersicherungsnummer"></span>
+                                        </p>
+                                        <p class="mb-0">
+                                            <span class="fw-semibold">Iban:</span>
+                                            <span id="detailIban"></span>
+                                        </p>
+                                        <p class="text-muted small mb-0">
+                                            Erstellt am:
+                                            <span id="detailErstellt"></span>
+                                        </p>                                       
+                                    </div>
+                                    <hr>
+                                    <div class="mb-3">
+                                        <h5 class="fw-semibold">📍 Adresse</h5>
+                                        <p class="mb-0" id="detailStrasse"></p>
+                                        <p class="mb-0">
+                                            <span id="detailPlz"></span>
+                                            <span id="detailOrt"></span>
+                                        </p>
+                                    </div>
+                                    <hr>
+                                    <div class="mb-3">
+                                        <h5 class="fw-semibold">📞 Kontakt</h5>
+                                        <p class="mb-1">
+                                            ✉️ <span id="detailEmail"></span>
+                                        </p>
+                                        <p class="mb-1">
+                                            ☎️ <span id="detailTelefon"></span>
+                                        </p>
+                                    </div>               
+                                    <div class="mb-3">
+                                        <h5 class="fw-semibold">Sonstiges</h5>
+                                        <div class="mb-3">
+                                            <span class="fw-semibold">Urlaub:</span>
+                                            <div class="table-responsive tabelle-scroll">
+                                                <table class="table table-striped table-hover" id="urlaubtabelle">
+                                                    <thead class="table-dark ">
+                                                        <tr>
+                                                            <th>Start</th>
+                                                            <th>Ende</th>
+                                                            <th>Bemerkung</th>
+                                                            
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody></tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <span class="fw-semibold">Krankheitstage:</span>
+                                            <table class="table table-striped table-hover" id="krankenstandtabelle">
+                                                <thead class="table-dark ">
+                                                    <tr>
+                                                        <th>Start</th>
+                                                        <th>Ende</th>
+                                                        <th>Bemerkung</th>                                                        
+                                                    </tr>
+                                                </thead>
+                                                <tbody></tbody>
+                                            </table>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <h5 class="fw-semibold">Mitarbeiter deaktivieren/aktivieren</h5>                                        
+                                        <button class="btn" type="button" id="aktiv">test</button>                  
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="mitarbeiterLoeschen" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title">Mitarbeiter löschen</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"aria-label="Schließen"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <p>
+                                    Wollen Sie den Mitarbeiter <span id="mitarbeiterNameLoeschen"></span> wirklich aus dem System löschen?.
+                                    </p>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Abbrechen </button>
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="mitarbeiterLoeschenBtn2">Löschen </button>                
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="modal fade" id="urlaubHinzufuegenModal" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title"> Urlaugstage Hinzufügen</h5>
+                                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <span class="fw-semibold">Starttermin</span>
+                                        <input type="date" class="form-control" id="urlaubStart">
+                                    </div>
+                                    <div class="mb-3">
+                                        <span class="fw-semibold">Endtermin</span>
+                                        <input type="date" class="form-control" id="urlaubEnde">
+                                    </div>
+                                    <div class="mb-3">
+                                        <span class="fw-semibold">Bemerkung</span>
+                                        <input type="text" class="form-control" id="bemerkungUrlaub">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Abbrechen </button>
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="urlaubSpeichernBtn">Speichern </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal fade" id="krankenstandHinzufuegenModal" tabindex="-1">
+                        <div class="modal-dialog modal-dialog-centered modal-dialog-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h5 class="modal-title"> Krankenstand hinzufügen</h5>
+                                    <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Schließen"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="mb-3">
+                                        <span class="fw-semibold">Starttermin</span>
+                                        <input type="date" class="form-control" id="krankenstandStart">
+                                    </div>
+                                    <div class="mb-3">
+                                        <span class="fw-semibold">Endtermin</span>
+                                        <input type="date" class="form-control" id="krankenstandEnde">
+                                    </div>
+                                    <div class="mb-3">
+                                        <span class="fw-semibold">Bemerkung</span>
+                                        <input type="text" class="form-control" id="krankenstandBemerkung">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Abbrechen </button>
+                                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal" id="krankenstandSpeichernBtn">Speichern </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </main>
+            
+        </body>
+
+    </html>

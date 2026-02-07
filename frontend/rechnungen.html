@@ -1,0 +1,590 @@
+<!-- ============================
+rechnungen.html (MERGE VERSION)
+- behält alle Modals/Funktionen aus Code #2
+- ergänzt/angleicht deine IDs & Felder aus Code #1
+============================ -->
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>🧾Rechnungen</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+  <!--<link rel="icon" type="image" href="file.svg" />-->
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+  <script type="module" src="./sessionCheck.js"></script>
+  <script type="module" src="scriptrechnungen.js"></script>
+</head>
+
+<body class="container-fluid">
+
+<div class="row flex-column flex-md-row min-vh-100">
+
+  <!-- Sidebar -->
+  <nav class="col-12 col-md-3 col-lg-2 sidebar d-flex flex-column p-3">
+    <h4 class="text-white mb-4 text-center">Navigation</h4>
+    <ul class="nav nav-pills flex-column mb-3">
+      <li class="nav-item">
+        <a class="nav-link" href="index.html">🏠 Home</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="lager.html">📦 Lager</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="mitarbeiter.html">👥 Mitarbeiter</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link active" href="rechnungen.html">🧾 Rechnungen</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="kunden.html">💼 Kunden</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="service.html">🛠️ Service</a>
+      </li>
+    </ul>
+
+    <div class="mt-auto">
+                    <!-- Logo mittig -->
+      <div class="text-center mb-3">
+        <img src="logo.png" alt="Installations GmbH Bergermayer" class="img-fluid rounded" style="max-width: 140px;"/></div>
+      <!-- Logout Button links unten -->
+      <button class="btn btn-danger w-100" id="logoutBtn">Abmelden</button>
+    </div>
+  </nav>
+
+  <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 2000;"></div> 
+
+
+  <!-- Hauptinhalt -->
+  <main class="col-12 col-md-9 col-lg-10 bg-light p-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <h1 class="fw-bold">Rechnungen</h1>
+
+      <form class="d-flex">
+        <input id="suchfeldRechnung" class="form-control me-2" type="search" placeholder="Suchen…">
+      </form>
+    </div>
+
+    <div class="p-4 bg-white rounded shadow-sm">
+      <div class="table-responsive tabelle-scroll">
+        <table class="table table-striped table-hover">
+          <thead class="table-dark">
+            <tr>
+              <th>Typ</th>
+              <th>Rechnungsnummer</th>
+              <th>Status</th>
+              <th>Datum</th>
+              <th>Fällig am</th>
+              <th>Nettosumme</th>
+              <th>Bruttosumme</th>
+            </tr>
+          </thead>
+          <tbody id="rechnungsBody"></tbody>
+        </table>
+      </div>
+
+      <br>
+
+      <button data-bs-toggle="modal" data-bs-target="#rechnungenHinzufuegenModal" class="btn btn-primary" id="rechnungHinzufuegenBtn">
+        Rechnungen/Angebote hinzufügen
+      </button>
+    </div>
+  </main>
+</div>
+
+
+<!-- =========================================================
+     MODAL: Rechnung hinzufügen
+========================================================= -->
+<div class="modal fade" id="rechnungenHinzufuegenModal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Rechnung hinzufügen</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- TYP (angeglichen auf angebot/rechnung wie in deiner HTML) -->
+        <div class="mb-3">
+          <label class="form-label">Typ<span class="text-danger">*</span></label>
+          <select class="form-select" id="angebotsTyp">
+            <option value="" selected>Bitte auswählen...</option>
+            <option value="angebot">Angebot</option>
+            <option value="rechnung">Rechnung</option>
+          </select>
+        </div>
+
+        <!-- KUNDE (deine IDs + hidden kunde_id) -->
+        <div class="mb-3">
+          <label class="form-label">Kunde<span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="kunde" placeholder="Kunde" readonly style="cursor:pointer;">
+          <input type="hidden" id="kunde_id">
+          <small class="text-muted">Klicken um Kunden auszuwählen</small>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Bemerkung 1</label>
+          <input type="text" class="form-control" id="bemerkung1">
+        </div>
+
+        <!-- BEMERKUNG ANZEIGEN -->
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" id="bemerkung_anzeigen1">
+          <label class="form-check-label" for="bemerkung_anzeigen1">Bemerkung 1 auf PDF anzeigen</label>
+        </div>
+
+        <!-- Artikel hinzufügen (beide Welten: id + data-bs-toggle/target) -->
+        <button
+          class="btn btn-primary"
+          type="button"
+          id="artikelModalOpenAdd"
+          data-bs-toggle="modal"
+          data-bs-target="#artikelModal">
+          Artikel hinzufügen <span class="text-danger">*</span>
+        </button>
+
+        <div id="positionsListe" class="mt-3"></div>
+
+        <!-- DATUM -->
+        <div class="mb-3 mt-3">
+          <label class="form-label">Datum<span class="text-danger">*</span></label>
+          <input type="date" class="form-control" id="datum">
+        </div>
+
+        <!-- FÄLLIG -->
+        <div class="mb-3">
+          <label class="form-label">Fälligkeitsdatum<span class="text-danger">*</span></label>
+          <input type="date" class="form-control" id="datumfaellig">
+        </div>
+
+        <!-- BEMERKUNG -->
+        <div class="mb-3">
+          <label class="form-label">Bemerkung 2</label>
+          <input type="text" class="form-control" id="bemerkung">
+        </div>
+
+        <!-- BEMERKUNG ANZEIGEN -->
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" id="bemerkung_anzeigen">
+          <label class="form-check-label" for="bemerkung_anzeigen">
+            Bemerkung 2 auf PDF anzeigen
+          </label>
+        </div>
+
+        <!-- SKONTO ANZEIGEN -->
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="checkbox" id="skonto_hinzufuegen">
+          <label class="form-check-label" for="skonto_hinzufuegen">
+            Skonto auf PDF anzeigen
+          </label>
+        </div>
+
+        <!-- SKONTO FELDER (nur sichtbar wenn Checkbox aktiv) -->
+        <div id="skontoWrap" class="row g-2 mb-3" style="display:none;">
+          <div class="col-md-6">
+            <label class="form-label">Skonto (%)</label>
+            <input type="number" class="form-control" id="skonto" min="1" max="100" value="3">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Skonto Tage</label>
+            <input type="number" class="form-control" id="skonto_tage" min="1" value="14">
+          </div>
+        </div>
+
+
+
+        <!-- STATUS (wie in deiner HTML: nur bei Rechnung) -->
+        <div class="mb-3" id="statusWrap" style="display:none;">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="status">
+            <option value="entwurf" selected>Entwurf</option>
+            <option value="offen">Offen</option>
+            <option value="bezahlt">Bezahlt</option>
+            <option value="storniert">Storniert</option>
+          </select>
+        </div>
+
+        <!-- ERSTELLT VON (aus Code #2 behalten) unnötig weils dann eh noch rein kommt
+        <div class="mb-3">
+          <label class="form-label">Erstellt von</label>
+          <input type="text" class="form-control" id="ersteller">
+        </div>
+        -->
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-primary" class="rechnungenHinzufuegenBtn" id="rechnungenSpeichernBtn">Speichern</button>
+        <button type="button" class="btn btn-primary" class="rechnungenHinzufuegenBtn" id="rechnungenSpeichernPdfBtn">Speichern + PDF</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- =========================================================
+     KUNDENMODAL ADD (GETRENNT)
+========================================================= -->
+<div class="modal fade" id="kundenAuswahlModal" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Kunde auswählen</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <input id="kundenSuchfeld" class="form-control mb-3" placeholder="Kunden suchen...">
+
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+          <table class="table table-hover">
+            <thead class="table-dark">
+              <tr>
+                <th>Firma</th><th>Vorname</th><th>Nachname</th><th>PLZ</th><th>Ort</th>
+              </tr>
+            </thead>
+            <tbody id="kundenTabelle"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- =========================================================
+     ARTIKELMODAL (EINMAL)
+========================================================= -->
+<div class="modal fade" id="artikelModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Artikel auswählen</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <input class="form-control mb-3" id="artikelsuche" placeholder="Artikel suchen...">
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+          <table class="table table-striped table-hover">
+            <thead class="table-dark">
+              <tr>
+                <th>Nummer</th>
+                <th>Bezeichnung</th>
+                <th>Preis</th>
+                <th>Menge</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="artikelListe"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" id="zurueckZurRechnungBtn">← Zurück zur Rechnung</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- =========================================================
+     MODAL: Rechnung verwalten
+========================================================= -->
+<div class="modal fade" id="rechnungVerwalten" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Rechnung verwalten</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <button class="btn btn-success d-block w-100 mb-2" id="rechnungBearbeitenBtn">Rechnung bearbeiten</button>
+        <button class="btn btn-warning d-block w-100 mb-2" id="rechnungDetailsBtn">Rechnungdetails anzeigen</button>
+        <button class="btn btn-info w-100 mb-2 d-none" id="rechnungAusAngebotBtn">Rechnung aus Angebot erstellen</button>
+        <button class="btn btn-danger d-block w-100 mb-2" id="rechnungLoeschenBtn">Rechnung löschen</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- =========================================================
+     MODAL: Rechnung bearbeiten
+========================================================= -->
+<div class="modal fade" id="rechnungBearbeiten" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Rechnung bearbeiten</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+
+        <!-- TYP (angeglichen wie Add) -->
+        <div class="mb-3">
+          <label class="form-label">Typ<span class="text-danger">*</span></label>
+          <select class="form-select" id="edit_typ">
+            <option value="" selected>Bitte auswählen...</option>
+            <option value="angebot">Angebot</option>
+            <option value="rechnung">Rechnung</option>
+          </select>
+        </div>
+
+        <!-- KUNDE (edit IDs + hidden edit_kunde_id) -->
+        <div class="mb-3">
+          <label class="form-label">Kunde<span class="text-danger">*</span></label>
+          <input type="text" class="form-control" id="edit_kunde" placeholder="Kunde" readonly style="cursor:pointer;">
+          <input type="hidden" id="edit_kunde_id">
+          <small class="text-muted">Klicken um Kunden zu ändern</small>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Bemerkung 1</label>
+          <input type="text" class="form-control" id="edit_bemerkung1">
+        </div>
+
+        <!-- BEMERKUNG ANZEIGEN (EDIT) -->
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" id="edit_bemerkung_anzeigen1">
+          <label class="form-check-label" for="edit_bemerkung_anzeigen1">
+            Bemerkung 1 auf PDF anzeigen
+          </label>
+        </div>
+
+        <!-- Artikel hinzufügen -->
+        <button
+          class="btn btn-primary"
+          type="button"
+          id="artikelModalOpenEdit"
+          data-bs-toggle="modal"
+          data-bs-target="#artikelModal">
+          Artikel hinzufügen
+          <span class="text-danger">*</span>
+        </button>
+
+        <div id="edit_positionsListe" class="mt-3"></div>
+
+        <div class="mb-3 mt-3">
+          <label class="form-label">Datum<span class="text-danger">*</span></label>
+          <input type="date" class="form-control" id="edit_datum">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Fälligkeitsdatum<span class="text-danger">*</span></label>
+          <input type="date" class="form-control" id="edit_datumfaellig">
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Bemerkung 2</label>
+          <input type="text" class="form-control" id="edit_bemerkung">
+        </div>
+
+        <!-- BEMERKUNG ANZEIGEN (EDIT) -->
+        <div class="form-check mb-3">
+          <input class="form-check-input" type="checkbox" id="edit_bemerkung_anzeigen">
+          <label class="form-check-label" for="edit_bemerkung_anzeigen">
+            Bemerkung 2 auf PDF anzeigen
+          </label>
+        </div>
+
+        <!-- SKONTO ANZEIGEN (EDIT) -->
+        <div class="form-check mb-2">
+          <input class="form-check-input" type="checkbox" id="edit_skonto_hinzufuegen">
+          <label class="form-check-label" for="edit_skonto_hinzufuegen">
+            Skonto auf PDF anzeigen
+          </label>
+        </div>
+
+        <!-- SKONTO FELDER (EDIT) -->
+        <div id="edit_skontoWrap" class="row g-2 mb-3" style="display:none;">
+          <div class="col-md-6">
+            <label class="form-label">Skonto (%)</label>
+            <input type="number" class="form-control" id="edit_skonto" min="1" max="100">
+          </div>
+          <div class="col-md-6">
+            <label class="form-label">Skonto Tage</label>
+            <input type="number" class="form-control" id="edit_skonto_tage" min="1">
+          </div>
+        </div>
+
+
+        <!-- STATUS (auch im Edit verfügbar; gleicher Wertekanon) -->
+        <div class="mb-3" id="edit_statusWrap" style="display:none;">
+          <label class="form-label">Status</label>
+          <select class="form-select" id="edit_status">
+            <option value="entwurf" selected>Entwurf</option>
+            <option value="offen">Offen</option>
+            <option value="bezahlt">Bezahlt</option>
+            <option value="storniert">Storniert</option>
+          </select>
+        </div>
+
+        <!--
+        <div class="mb-3">
+          <label class="form-label">Erstellt von</label>
+          <input type="text" class="form-control" id="edit_ersteller">
+        </div>
+        -->
+        
+
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Abbrechen</button>
+        <button type="button" class="btn btn-primary" id="rechnungBearbeitenSpeichernBtn">Speichern</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- =========================================================
+     KUNDENMODAL EDIT (GETRENNT)
+========================================================= -->
+<div class="modal fade" id="kundenAuswahlModalEdit" tabindex="-1">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Kunde auswählen (Bearbeiten)</h5>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <input id="kundenSuchfeldEdit" class="form-control mb-3" placeholder="Kunden suchen...">
+
+        <div class="table-responsive" style="max-height: 400px; overflow-y: auto;">
+          <table class="table table-hover">
+            <thead class="table-dark">
+              <tr>
+                <th>Firma</th><th>Vorname</th><th>Nachname</th><th>PLZ</th><th>Ort</th>
+              </tr>
+            </thead>
+            <tbody id="kundenTabelleEdit"></tbody>
+          </table>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<!-- =========================================================
+     MODAL: Rechnung Details
+========================================================= -->
+<div class="modal fade" id="rechnungDetails" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg modal-dialog-scrollable">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Rechnung Details</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <div class="mb-3">
+          <h4 id="detailRechnungsnummer" class="fw-bold"></h4>
+
+          <p class="mb-0"><span class="fw-semibold">Typ:</span> <span id="detailTyp"></span></p>
+          <p class="mb-0"><span class="fw-semibold">Status: </span><span id="detailStatus"></span></p>
+          <p class="mb-0"><span class="fw-semibold">Bemerkung 1:</span> <span id="detailBemerkung1"></span></p>
+          <p class="mb-0"><span class="fw-semibold">Bemerkung 1 anzeigen:</span> <span id="detailBemerkungAnzeigen1"></span></p>
+          <p class="mb-0"><span class="fw-semibold">Kunde:</span> <span id="detailKunde"></span></p>
+          <p class="mb-0"><span class="fw-semibold">Bemerkung 2:</span> <span id="detailBemerkung"></span></p>
+          <p class="mb-0"><span class="fw-semibold">Bemerkung 2 anzeigen:</span> <span id="detailBemerkungAnzeigen"></span></p>
+          <p class="mb-0"><span class="fw-semibold">Skonto:</span>&nbsp;<span id="detailSkonto"></span></p>
+          <p class="text-muted small mb-0">Erstellt am:&nbsp;<span id="detailDatum"></span></p>
+
+        </div>
+
+        <hr>
+
+        <h5 class="mb-2">Positionen</h5>
+        <div class="table-responsive">
+          <table class="table table-sm table-striped align-middle">
+            <thead class="table-light">
+              <tr>
+                <th style="width:70px;">Pos</th>
+                <th>Artikel</th>
+                <th style="width:90px;">Menge</th>
+                <th style="width:120px;">Einzelpreis</th>
+                <th style="width:120px;">Gesamt</th>
+              </tr>
+            </thead>
+            <tbody id="detailPositionenBody"></tbody>
+          </table>
+        </div>
+
+
+        <hr>
+
+        <p class="mb-0"><span class="fw-semibold">Bruttosumme:</span> <span id="detailBrutto"></span></p>
+        <p class="mb-0"><span class="fw-semibold">Nettosumme:</span> <span id="detailNetto"></span></p>
+        <p class="mb-0"><span class="fw-semibold">Fällig am:</span> <span id="detailFaellig"></span></p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-primary" id="detailPdfBtn">
+          PDF erstellen
+        </button>
+        <!--
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Schließen
+        </button>
+        -->
+      </div>
+
+
+    </div>
+  </div>
+</div>
+
+
+<!-- =========================================================
+     MODAL: Rechnung löschen
+========================================================= -->
+<div class="modal fade" id="rechnungLoeschen" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-dialog-lg">
+    <div class="modal-content">
+
+      <div class="modal-header">
+        <h5 class="modal-title">Rechnung löschen</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+
+      <div class="modal-body">
+        <p>Wollen Sie die Rechnung wirklich aus dem System löschen?</p>
+        <p class="mt-2"><strong>Rechnung: </strong><span id="loeschenRechnungsnummer"></span></p>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Abbrechen</button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" id="rechnungLoeschenBtn2">Löschen</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
